@@ -1,6 +1,7 @@
 package balbucio.glasslibrary;
 
 import balbucio.glasslibrary.component.GlassMenuBar;
+import balbucio.glasslibrary.component.GlassPane;
 import balbucio.glasslibrary.window.effect.SwingAcrylic;
 
 import javax.swing.*;
@@ -8,12 +9,12 @@ import java.awt.*;
 
 public class GlassFrame extends JFrame{
 
-    private JPanel rootpane;
+    private GlassPane rootpane;
     private GlassMenuBar menuBar;
 
     public GlassFrame(String title) throws HeadlessException {
         super(title);
-        this.rootpane = new JPanel();
+        this.rootpane = new GlassPane();
         rootpane.setName("RootPane");
         this.setLayout(new BorderLayout());
         this.setUndecorated(true);
@@ -25,6 +26,10 @@ public class GlassFrame extends JFrame{
             menuBar.scale();
             SwingAcrylic.processFrame(this, 255, 0x990500);
         });
+    }
+
+    public GlassPane getComponentPanel(){
+        return rootpane;
     }
 
     public void layout(LayoutManager manager){

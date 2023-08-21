@@ -1,6 +1,7 @@
 package balbucio.glasslibrary.window.effect;
 
 import balbucio.glasslibrary.component.GlassMenuBar;
+import balbucio.glasslibrary.component.GlassPane;
 import balbucio.glasslibrary.window.effect.jna.*;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
@@ -74,14 +75,17 @@ public class SwingAcrylic {
      * @param component - a Java Swing component
      */
     public static void addTransparencyToBackground(Component component) {
-        component.setBackground(new Color(0, 0, 0, 0));
+        component.setBackground(new Color(0, 0, 0, 1));
         if(component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) {
                 if(child instanceof GlassMenuBar gm){
                     gm.setBackground(new Color(0, 0, 0, 40));
-                    continue;
+                } else if(child instanceof JButton){
+                } else if(child instanceof GlassPane gp){
+                    Arrays.asList(gp.getComponents()).forEach(c -> addTransparencyToBackground(c));
+                } else {
+                    addTransparencyToBackground(child);
                 }
-                addTransparencyToBackground(child);
             }
         }
     }

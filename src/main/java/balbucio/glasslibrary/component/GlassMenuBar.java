@@ -38,7 +38,23 @@ public class GlassMenuBar extends JPanel {
         left = new JPanel(new FlowLayout(FlowLayout.LEFT));
         left.setBackground(new Color(0,0,0,0));
         this.minimize = new JLabel(GlassIcon.MINIMIZE_ICON);
+        minimize.addMouseListener(new ClickListener() {
+            @Override
+            public void click(MouseEvent evt) {
+                frame.setState(Frame.ICONIFIED);
+            }
+        });
         this.maximize = new JLabel(GlassIcon.MAXIMIZE_ICON);
+        maximize.addMouseListener(new ClickListener() {
+            @Override
+            public void click(MouseEvent evt) {
+                if(frame.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                } else{
+                    frame.setExtendedState(JFrame.NORMAL);
+                }
+            }
+        });
         this.close = new JLabel(GlassIcon.CLOSE_ICON);
         close.addMouseListener(new ClickListener() {
             @Override
