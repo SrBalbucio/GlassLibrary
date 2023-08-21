@@ -3,6 +3,7 @@ package balbucio.glasslibrary;
 import balbucio.glasslibrary.component.GlassMenuBar;
 import balbucio.glasslibrary.component.GlassPane;
 import balbucio.glasslibrary.window.effect.SwingAcrylic;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,10 @@ public class GlassFrame extends JFrame{
             menuBar.scale();
             SwingAcrylic.processFrame(this, 255, 0x990500);
         });
+    }
+
+    public GlassMenuBar menuBar(){
+        return menuBar;
     }
 
     public GlassPane getComponentPanel(){

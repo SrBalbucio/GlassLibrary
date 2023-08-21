@@ -45,6 +45,11 @@ public class SwingAcrylic {
         enableAcrylic(frame, opacity, background);
     }
 
+    public static void processFrame(JDialog frame, int opacity, int background) {
+        addTransparencyToBackground(frame);
+        enableAcrylic(frame, opacity, background);
+    }
+
     /**
      * Manually enable native acrylic on window,
      * transparent background is required
@@ -52,6 +57,23 @@ public class SwingAcrylic {
      * @param frame - frame
      */
     public static boolean enableAcrylic(JFrame frame, int opacity, int background) {
+        WinDef.HWND hwnd = new WinDef.HWND(Native.getWindowPointer(frame));
+
+        AccentPolicy policy = new AccentPolicy();
+        policy.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+        policy.GradientColor = (opacity << 24) | (background & 0xFFFFFF);
+        policy.write();
+
+        WindowCompositionAttributeData data = new WindowCompositionAttributeData();
+        data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
+        data.Data = policy.getPointer();
+        data.SizeOfData = policy.size();
+        data.write();
+
+        return SAUser32.INSTANCE.SetWindowCompositionAttribute(hwnd, data.getPointer());
+    }
+
+    public static boolean enableAcrylic(JDialog frame, int opacity, int background) {
         WinDef.HWND hwnd = new WinDef.HWND(Native.getWindowPointer(frame));
 
         AccentPolicy policy = new AccentPolicy();

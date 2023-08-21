@@ -1,5 +1,6 @@
 package balbucio.glasslibrary;
 
+import balbucio.glasslibrary.dialog.GlassMessage;
 import balbucio.glasslibrary.window.effect.SwingAcrylic;
 
 import java.awt.*;
@@ -11,6 +12,10 @@ public class GlassLibrary {
 
     public GlassLibrary(){
 
+    }
+
+    public void showGlassMessage(String title, String message){
+        new GlassMessage(null, title, message);
     }
 
     public boolean isSupported(){

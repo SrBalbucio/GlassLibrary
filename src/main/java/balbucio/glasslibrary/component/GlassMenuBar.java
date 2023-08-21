@@ -3,6 +3,10 @@ package balbucio.glasslibrary.component;
 import balbucio.glasslibrary.GlassFrame;
 import balbucio.glasslibrary.GlassIcon;
 import balbucio.glasslibrary.window.listener.ClickListener;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,15 +24,81 @@ public class GlassMenuBar extends JPanel {
     private JLabel close;
     private JLabel maximize;
     private JLabel minimize;
+    private JLabel cfg;
     private JLabel title;
     private GlassFrame frame;
     private Point mouseDownCompCoords;
+    @Getter
+    @Setter
+    private Config config;
 
     public GlassMenuBar(String titleApp, GlassFrame frame){
+        this(titleApp, frame, Config.builder()
+                .doubleClickToMaximize(true)
+                .build());
+    }
+
+    public GlassMenuBar(String titleApp, GlassFrame frame, Config config){
+        this.config = config;
         this.setName("GlassMenuBar");
         this.frame = frame;
         this.setLayout(new BorderLayout());
 
+        create(titleApp);
+
+        this.add(right, BorderLayout.WEST);
+        this.add(left, BorderLayout.EAST);
+        this.addMouseListener(new MouseAdapter() {
+            int count = 0;
+            long time = System.currentTimeMillis();
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(config.isDoubleClickToMaximize()) {
+                    if (count == 1) {
+                        if((System.currentTimeMillis() - time) < 500) {
+                            maximize();
+                            count = 0;
+                        } else{
+                            time = System.currentTimeMillis();
+                            count = 0;
+                        }
+                    }
+                    count++;
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseDownCompCoords = e.getPoint();
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });
+    }
+
+    public void maximize(){
+        if (frame.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        } else {
+            frame.setExtendedState(JFrame.NORMAL);
+        }
+    }
+
+    public void update(){
+        cfg.setVisible(config.isConfigIcon());
+    }
+
+    public void scale(){
+        int x = (right.getHeight() - title.getHeight()) / 4;
+        title.setBorder(new EmptyBorder(x,5,x,0));
+    }
+
+    private void create(String titleApp){
         right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         right.setBackground(new Color(0,0,0,0));
         this.title = new JLabel(titleApp);
@@ -48,11 +118,7 @@ public class GlassMenuBar extends JPanel {
         maximize.addMouseListener(new ClickListener() {
             @Override
             public void click(MouseEvent evt) {
-                if(frame.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
-                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                } else{
-                    frame.setExtendedState(JFrame.NORMAL);
-                }
+                maximize();
             }
         });
         this.close = new JLabel(GlassIcon.CLOSE_ICON);
@@ -62,29 +128,29 @@ public class GlassMenuBar extends JPanel {
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         });
+
+        this.cfg = new JLabel(GlassIcon.CONFIG_ICON);
+        cfg.addMouseListener(new ClickListener() {
+            @Override
+            public void click(MouseEvent evt) {
+                if(config.isConfigIcon() && config.configClickEvent != null){
+                    config.getConfigClickEvent().run();
+                }
+            }
+        });
+        cfg.setVisible(config.isConfigIcon());
+        left.add(cfg);
         left.add(minimize);
         left.add(maximize);
         left.add(close);
-
-        this.add(right, BorderLayout.WEST);
-        this.add(left, BorderLayout.EAST);
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                mouseDownCompCoords = e.getPoint();
-            }
-        });
-        this.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                Point currCoords = e.getLocationOnScreen();
-                frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
-            }
-        });
     }
 
-    public void scale(){
-        int x = (right.getHeight() - title.getHeight()) / 4;
-        title.setBorder(new EmptyBorder(x,5,x,0));
+    @Data
+    @Builder
+    public static class Config{
+
+        boolean doubleClickToMaximize = true;
+        boolean configIcon = false;
+        Runnable configClickEvent = null;
     }
 }

@@ -12,6 +12,12 @@ public class ThemedWindowTest {
         GlassLibrary glassLibrary = new GlassLibrary();
         if(glassLibrary.isSupported()) {
             GlassFrame frame = new GlassFrame("GlassFrame Test");
+            frame.menuBar().getConfig().setConfigIcon(true);
+            frame.menuBar().getConfig().setConfigClickEvent(() -> glassLibrary.showGlassMessage("Config",
+                    "Voce abriu o menu de configuração, este é um teste\n" +
+                            "do GlassMessage com um texto bem grandao. Se voce \n" +
+                            "deseja sair clica em Ok."));
+            frame.menuBar().update();
             frame.setSize(640, 480);
             BoxLayout layout = new BoxLayout(frame.getComponentPanel(), BoxLayout.Y_AXIS);
             frame.layout(layout);
@@ -22,7 +28,6 @@ public class ThemedWindowTest {
 
             frame.addComponent(text1, null);
             frame.addComponent(new JButton("Botao"), null);
-
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         }
     }
