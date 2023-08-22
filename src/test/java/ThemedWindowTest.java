@@ -12,6 +12,7 @@ public class ThemedWindowTest {
         GlassLibrary glassLibrary = new GlassLibrary();
         if(glassLibrary.isSupported()) {
             GlassFrame frame = new GlassFrame("GlassFrame Test");
+            frame.menuBar().getConfig().setDoubleClickToMaximize(true);
             frame.menuBar().getConfig().setConfigIcon(true);
             frame.menuBar().getConfig().setConfigClickEvent(() -> glassLibrary.showGlassMessage("Config",
                     "Voce abriu o menu de configuração, este é um teste\n" +
