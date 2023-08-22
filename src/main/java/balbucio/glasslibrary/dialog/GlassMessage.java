@@ -20,7 +20,8 @@ public class GlassMessage extends JDialog {
         this.message = message;
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
-
+        this.setUndecorated(true);
+        this.setOpacity(0.8f);
         JPanel icon = new JPanel();
         JPanel text = new JPanel();
         List<String> lines = StringUtils.breakTextIntoLines(message, text.getFontMetrics(text.getFont()), 330);
@@ -41,7 +42,6 @@ public class GlassMessage extends JDialog {
             AtomicInteger size = new AtomicInteger();
             Arrays.asList(text.getComponents()).forEach(c -> size.addAndGet(c.getHeight()));
             this.setSize(new Dimension(440, size.addAndGet(80)));
-            SwingAcrylic.processFrame(this, 255, 0x990500);
             this.setVisible(true);
         });
     }
