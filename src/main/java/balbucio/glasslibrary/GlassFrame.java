@@ -13,7 +13,11 @@ public class GlassFrame extends JFrame{
     private GlassPane rootpane;
     private GlassMenuBar menuBar;
 
-    public GlassFrame(String title) throws HeadlessException {
+    public GlassFrame(String title){
+        this(title, 255, 0x990500);
+    }
+
+    public GlassFrame(String title, int opacity, int background) throws HeadlessException {
         super(title);
         this.rootpane = new GlassPane();
         rootpane.setName("RootPane");
@@ -25,8 +29,13 @@ public class GlassFrame extends JFrame{
         SwingUtilities.invokeLater(() -> {
             setVisible(true);
             menuBar.scale();
-            SwingAcrylic.processFrame(this, 255, 0x990500);
+            SwingAcrylic.processFrame(this, opacity, background);
         });
+    }
+
+    @Override
+    public void setUndecorated(boolean undecorated) {
+        super.setUndecorated(true);
     }
 
     public GlassMenuBar menuBar(){
