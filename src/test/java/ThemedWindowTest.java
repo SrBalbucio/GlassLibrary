@@ -20,6 +20,7 @@ public class ThemedWindowTest {
                             "deseja sair clica em Ok."));
             frame.menuBar().update();
             frame.setSize(640, 480);
+            frame.setAutomaticColorChange(true);
             BoxLayout layout = new BoxLayout(frame.getComponentPanel(), BoxLayout.Y_AXIS);
             frame.layout(layout);
             JPanel text1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
