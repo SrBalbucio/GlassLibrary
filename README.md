@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/SrBalbucio/GlassLibrary.svg)](https://jitpack.io/#SrBalbucio/GlassLibrary)
 # GlassLibrary - Components with glass effect
 With this library you can create windows (jframe) and components with Glassmorphism effect with high reliability and quality.
 > Important: This code for now should only work on Windows operating system, more specifically on version 10 build 17134 or later.
