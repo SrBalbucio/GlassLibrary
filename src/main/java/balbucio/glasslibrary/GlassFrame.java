@@ -4,6 +4,7 @@ import balbucio.glasslibrary.component.GlassMenuBar;
 import balbucio.glasslibrary.component.GlassPane;
 import balbucio.glasslibrary.utils.FrameColor;
 import balbucio.glasslibrary.utils.FrameUtils;
+import balbucio.glasslibrary.window.ComponentResizer;
 import balbucio.glasslibrary.window.effect.SwingAcrylic;
 import balbucio.responsivescheduler.ResponsiveScheduler;
 import lombok.Getter;
@@ -56,6 +57,11 @@ public class GlassFrame extends JFrame{
             }
         });
         SwingUtilities.invokeLater(() -> {
+            ComponentResizer cr = new ComponentResizer();
+            cr.setMinimumSize(new Dimension(300, 300));
+//            cr.setMaximumSize(new Dimension(800, 600));
+            cr.registerComponent(this);
+            cr.setSnapSize(new Dimension(10, 10));
             setVisible(true);
             menuBar.scale();
             SwingAcrylic.processFrame(this, opacity, background);

@@ -4,10 +4,11 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContras
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class ThemedWindowTest {
 
-    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException, IOException, FontFormatException {
         UIManager.setLookAndFeel(new FlatArcDarkContrastIJTheme());
         GlassLibrary glassLibrary = new GlassLibrary();
         if(glassLibrary.isSupported()) {
@@ -18,6 +19,8 @@ public class ThemedWindowTest {
                     "Voce abriu o menu de configuração, este é um teste\n" +
                             "do GlassMessage com um texto bem grandao. Se voce \n" +
                             "deseja sair clica em Ok."));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, ThemedWindowTest.class.getResourceAsStream("/Lato-Regular.ttf"));
+            frame.menuBar().getConfig().setFont(font.deriveFont(20f));
             frame.menuBar().update();
             frame.setSize(640, 480);
             frame.setAutomaticColorChange(true);

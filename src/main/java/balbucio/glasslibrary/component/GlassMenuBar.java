@@ -81,6 +81,7 @@ public class GlassMenuBar extends JPanel {
         });
     }
 
+
     public void maximize(){
         if (frame.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -90,6 +91,9 @@ public class GlassMenuBar extends JPanel {
     }
 
     public void update(){
+        if(config.getFont() != null){
+            title.setFont(config.getFont());
+        }
         cfg.setVisible(config.isConfigIcon());
     }
 
@@ -103,6 +107,9 @@ public class GlassMenuBar extends JPanel {
         right.setBackground(new Color(0,0,0,0));
         this.title = new JLabel(titleApp);
         title.setForeground(Color.WHITE);
+        if(config.getFont() != null){
+            title.setFont(config.getFont());
+        }
         right.add(title);
 
         left = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -151,6 +158,7 @@ public class GlassMenuBar extends JPanel {
 
         boolean doubleClickToMaximize = true;
         boolean configIcon = false;
+        Font font = null;
         Runnable configClickEvent = null;
     }
 }
