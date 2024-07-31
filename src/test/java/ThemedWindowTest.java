@@ -12,7 +12,10 @@ public class ThemedWindowTest {
         UIManager.setLookAndFeel(new FlatArcDarkContrastIJTheme());
         GlassLibrary glassLibrary = new GlassLibrary();
         if(glassLibrary.isSupported()) {
-            GlassFrame frame = new GlassFrame("GlassFrame Test");
+            GlassFrame frame = new GlassFrame("GlassFrame Test", GlassFrame.Config.builder()
+                    .instance(glassLibrary)
+                    .updateInterval(900)
+                    .build());
             frame.menuBar().getConfig().setDoubleClickToMaximize(true);
             frame.menuBar().getConfig().setConfigIcon(true);
             frame.menuBar().getConfig().setConfigClickEvent(() -> glassLibrary.showGlassMessage("Config",

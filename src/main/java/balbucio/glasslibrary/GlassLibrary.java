@@ -10,10 +10,6 @@ public class GlassLibrary {
     private GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
     private GraphicsDevice gd = ge.getDefaultScreenDevice();
 
-    public GlassLibrary(){
-
-    }
-
     public void showGlassMessage(String title, String message){
         showGlassMessage(null, title, message);
     }
