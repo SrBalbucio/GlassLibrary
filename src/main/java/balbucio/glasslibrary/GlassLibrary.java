@@ -22,6 +22,10 @@ public class GlassLibrary {
         new GlassMessage(owner, title, message);
     }
 
+    public boolean isGlassFrame(JFrame frame){
+        return frame instanceof GlassFrame;
+    }
+
     public boolean isSupported(){
         if(!gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)){
             return false;

@@ -34,6 +34,7 @@ public class GlassFrame extends JFrame{
         this.rootpane = new GlassPane();
         rootpane.setName("RootPane");
         this.setLayout(new BorderLayout());
+        this.setLocationRelativeTo(null);
         this.setUndecorated(true);
         this.menuBar = new GlassMenuBar(title, this);
         this.add(menuBar, BorderLayout.NORTH);

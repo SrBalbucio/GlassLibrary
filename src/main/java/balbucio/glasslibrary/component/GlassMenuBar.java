@@ -84,7 +84,10 @@ public class GlassMenuBar extends JPanel {
 
     public void maximize(){
         if (frame.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            Rectangle bounds = env.getMaximumWindowBounds();
+            frame.setMaximizedBounds(bounds);
+            frame.setExtendedState((frame.getExtendedState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH ? JFrame.NORMAL : JFrame.MAXIMIZED_BOTH);
         } else {
             frame.setExtendedState(JFrame.NORMAL);
         }
