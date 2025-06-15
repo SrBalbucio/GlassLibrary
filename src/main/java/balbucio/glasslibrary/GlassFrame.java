@@ -6,8 +6,6 @@ import balbucio.glasslibrary.utils.FrameColor;
 import balbucio.glasslibrary.utils.FrameUtils;
 import balbucio.glasslibrary.window.ComponentResizer;
 import balbucio.glasslibrary.window.effect.SwingAcrylic;
-import balbucio.responsivescheduler.ResponsiveScheduler;
-import com.sun.jna.platform.WindowUtils;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -15,12 +13,11 @@ import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.geom.RoundRectangle2D;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class GlassFrame extends JFrame implements ComponentListener, Runnable {
     @Getter
@@ -30,7 +27,7 @@ public class GlassFrame extends JFrame implements ComponentListener, Runnable {
     private GlassMenuBar menuBar;
     private Config config;
 
-    public GlassFrame(String title){
+    public GlassFrame(String title) {
         this(title, Config.builder().build());
     }
 
@@ -53,23 +50,23 @@ public class GlassFrame extends JFrame implements ComponentListener, Runnable {
         super.setUndecorated(true);
     }
 
-    public GlassMenuBar menuBar(){
+    public GlassMenuBar menuBar() {
         return menuBar;
     }
 
-    public GlassPane getComponentPanel(){
+    public GlassPane getComponentPanel() {
         return rootpane;
     }
 
-    public void layout(LayoutManager manager){
+    public void layout(LayoutManager manager) {
         rootpane.setLayout(manager);
     }
 
-    public void addComponent(Component c, Object o){
+    public void addComponent(Component c, Object o) {
         rootpane.add(c, o);
     }
 
-    private void switchLabelColor(JComponent c, Color color){
+    private void switchLabelColor(JComponent c, Color color) {
         c.setForeground(color);
         Arrays.asList(c.getComponents()).forEach(ci -> {
             switchLabelColor((JComponent) ci, color);
@@ -85,17 +82,15 @@ public class GlassFrame extends JFrame implements ComponentListener, Runnable {
 
     @Override
     public void componentMoved(ComponentEvent e) {
-        if((System.currentTimeMillis() - lastUpdate) > config.updateInterval) {
+        if ((System.currentTimeMillis() - lastUpdate) > config.updateInterval) {
             if (automaticColorChange) {
-                ResponsiveScheduler.run(() -> {
-                    if(config.getInstance().isSupported()) {
-                        FrameColor color = FrameUtils.averageFrameColor((JFrame) e.getComponent());
-                        boolean b = color.isColorCloserToBlack();
-                        Arrays.asList(((JFrame) e.getComponent()).getComponents())
-                                .forEach(c -> switchLabelColor((JComponent) c, b ? Color.WHITE : Color.BLACK));
-                        lastUpdate = System.currentTimeMillis();
-                    }
-                });
+                if (config.getInstance().isSupported()) {
+                    FrameColor color = FrameUtils.averageFrameColor((JFrame) e.getComponent());
+                    boolean b = color.isColorCloserToBlack();
+                    Arrays.asList(((JFrame) e.getComponent()).getComponents())
+                            .forEach(c -> switchLabelColor((JComponent) c, b ? Color.WHITE : Color.BLACK));
+                    lastUpdate = System.currentTimeMillis();
+                }
             }
         }
     }
@@ -118,19 +113,20 @@ public class GlassFrame extends JFrame implements ComponentListener, Runnable {
         cr.setSnapSize(new Dimension(10, 10));
         setVisible(true);
         menuBar.scale();
-        if(config.getInstance().isSupported()) {
+        if (config.getInstance().isSupported()) {
             SwingAcrylic.processFrame(this, config.opacity, config.background);
         }
     }
 
     @Builder
     @Data
-    public static class Config{
+    public static class Config {
         GlassLibrary instance = new GlassLibrary();
         int opacity = 255;
         int background = 0x990500;
         Dimension minimumSize = new Dimension(640, 480);
         long updateInterval = 500;
         int borderRadius = 15;
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     }
 }

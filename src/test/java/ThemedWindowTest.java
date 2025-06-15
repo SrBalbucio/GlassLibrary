@@ -1,6 +1,6 @@
 import balbucio.glasslibrary.GlassFrame;
 import balbucio.glasslibrary.GlassLibrary;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +9,16 @@ import java.io.IOException;
 public class ThemedWindowTest {
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException, IOException, FontFormatException {
-        UIManager.setLookAndFeel(new FlatArcDarkContrastIJTheme());
+        UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
         GlassLibrary glassLibrary = new GlassLibrary();
         if(glassLibrary.isSupported()) {
             GlassFrame frame = new GlassFrame("GlassFrame Test", GlassFrame.Config.builder()
+                    .opacity(255)
+                    .background(0x643232)
                     .instance(glassLibrary)
                     .updateInterval(900)
+                    .minimumSize(new Dimension(640, 480))
+                    .borderRadius(20)
                     .build());
             frame.menuBar().getConfig().setDoubleClickToMaximize(true);
             frame.menuBar().getConfig().setConfigIcon(true);

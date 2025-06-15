@@ -14,18 +14,19 @@ import java.util.Arrays;
 
 /**
  * SwingAcrylic
- *
+ * <p>
  * Native Windows 10 acrylic effect
  * for Java Swing Applications
- *
+ * <p>
  * Supported Windows 10 1803 (April 2018 Update)
  * and higher (until it was removed by Microsoft)
- *
+ * <p>
  * This is a port of an existing code to Java:
  * https://github.com/riverar/sample-win32-acrylicblur (C#)
  * https://ru.stackoverflow.com/a/858167 (Python)
- *
+ * <p>
  * https://github.com/krlvm/SwingAcrylic
+ *
  * @author krlvm
  */
 public class SwingAcrylic {
@@ -36,8 +37,8 @@ public class SwingAcrylic {
      * Automatically make window and its children background
      * transparent and apply native acrylic effect
      *
-     * @param frame - frame
-     * @param opacity - transparency opacity
+     * @param frame      - frame
+     * @param opacity    - transparency opacity
      * @param background - blur background (BGR)
      */
     public static void processFrame(JFrame frame, int opacity, int background) {
@@ -97,15 +98,17 @@ public class SwingAcrylic {
      * @param component - a Java Swing component
      */
     public static void addTransparencyToBackground(Component component) {
+        if (component instanceof JButton || component instanceof JTextField) {
+            return;
+        }
         component.setBackground(new Color(0, 0, 0, 1));
-        if(component instanceof Container) {
+        if (component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) {
-                if(child instanceof GlassMenuBar gm){
-                    gm.setBackground(new Color(0, 0, 0, 40));
-                } else if(child instanceof JButton){
-                } else if(child instanceof GlassPane gp){
-                    Arrays.asList(gp.getComponents()).forEach(c -> addTransparencyToBackground(c));
-                } else {
+                if (child instanceof GlassMenuBar) {
+                    ((GlassMenuBar) child).setBackground(new Color(0, 0, 0, 40));
+                } else if (child instanceof GlassPane) {
+                    Arrays.asList(((GlassPane) child).getComponents()).forEach(SwingAcrylic::addTransparencyToBackground);
+                } else if (!(child instanceof JButton || child instanceof JTextField)) {
                     addTransparencyToBackground(child);
                 }
             }
@@ -113,7 +116,7 @@ public class SwingAcrylic {
     }
 
     public static boolean isSupported() {
-        if(!System.getProperty("os.name").equals("Windows 10") && !System.getProperty("os.name").equals("Windows 11")) {
+        if (!System.getProperty("os.name").equals("Windows 10") && !System.getProperty("os.name").equals("Windows 11")) {
             return false;
         }
 
